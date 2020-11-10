@@ -1,0 +1,50 @@
+##Final Question, Genes per Chromosome
+
+1) Isolated only the first and third columns. Sorted and found string pattern for gene and conducted count. The first results were genes.
+2) Unsure how to anchor the gene. I tried ^gene but there was no output. 
+```
+cut -f1,3 'dmel-all-r6.36.gtf'\
+|sort\
+|grep gene\
+|uniq -c\
+|sort -nr
+
+>
+4225 3R	gene
+   3653 2R	gene
+   3516 2L	gene
+   3486 3L	gene
+   2691 X	gene
+    114 4	gene
+    113 Y	gene
+     79 X	pseudogene
+     62 Y	pseudogene
+     57 2R	pseudogene
+     54 2L	pseudogene
+     49 3R	pseudogene
+     45 3L	pseudogene
+     38 mitochondrion_genome	gene
+     21 rDNA	gene
+     11 4	pseudogene
+      5 rDNA	pseudogene
+      2 Unmapped_Scaffold_8_D1580_D1567	gene
+      2 211000022280494	gene
+      1 211000022280703	pseudogene
+      1 211000022280703	gene
+      1 211000022280481	gene
+      1 211000022280347	gene
+      1 211000022280341	pseudogene
+      1 211000022280341	gene
+      1 211000022280328	gene
+      1 211000022279681	gene
+      1 211000022279392	gene
+      1 211000022279264	gene
+      1 211000022279188	gene
+      1 211000022279165	gene
+      1 211000022278760	gene
+      1 211000022278449	pseudogene
+      1 211000022278449	gene
+      1 211000022278436	gene
+      1 211000022278279	pseudogene
+      1 211000022278279	gene
+```
