@@ -50,3 +50,14 @@ outname=~/dmelrel6_filtered
 bioawk -c fastx '{ print $name,length($seq),gc($seq) }' dmelrel6_filtered.fa \
 |column -t \
 > $outname.txt
+
+
+outname=~/dmelrel6_filtered
+bioawk -c fastx '{ print length($seq)}' dmelrel6_filtered.fa \
+|column -t \
+|sort -rn \
+> $outname.txt
+
+#For cumulative 
+outname=~/dmelrel6_filtered
+gawk '{ tot=tot+$1; print $1 "\t" tot} END {print tot}' $outname.txt \
