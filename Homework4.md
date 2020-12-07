@@ -45,3 +45,8 @@ N count: mean 355.7 sd 1700.6
 U count: mean 2960.5 sd 6351.5
 L count: mean 0.0 sd 0.0
 %0.00 masked total, %0.00 masked real
+
+outname=~/dmelrel6_filtered
+bioawk -c fastx '{ print $name,length($seq),gc($seq) }' dmelrel6_filtered.fa \
+|column -t \
+> $outname.txt
