@@ -61,3 +61,12 @@ bioawk -c fastx '{ print length($seq)}' dmelrel6_filtered.fa \
 #For cumulative 
 outname=~/dmelrel6_filtered
 gawk '{ tot=tot+$1; print $1 "\t" tot} END {print tot}' $outname.txt \
+| sort -k1,1rn \
+| gawk 'NR ==1 {tot = $1 } NR > 1 {print $0 "\t" $2 / tot} ' | column -t
+
+#N50
+#For cumulative 
+outname=~/dmelrel6_filtered
+gawk '{ tot=tot+$1; print $1 "\t" tot} END {print tot}' $outname.txt \
+| sort -k1,1rn \
+| gawk 'NR ==1 {tot = $1 } NR > 1 && $2/tot >= 0.5 {print $1} ' | head -1
