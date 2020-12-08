@@ -70,3 +70,9 @@ outname=~/dmelrel6_filtered
 gawk '{ tot=tot+$1; print $1 "\t" tot} END {print tot}' $outname.txt \
 | sort -k1,1rn \
 | gawk 'NR ==1 {tot = $1 } NR > 1 && $2/tot >= 0.5 {print $1} ' | head -1
+
+#in R do the following commands
+dmelrel6_filtered$V1 <- log10(dmelrel6_filtered$V1)
+dmelrel6_filtered$V1 <- cut(x=dmelrel6_filtered$V1,breaks = 10)
+p <- ggplot(data=dmelrel6_filtered)
+p + geom_bar(mapping=aes(x=V1))
