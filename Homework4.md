@@ -62,7 +62,13 @@ bioawk -c fastx '{ print length($seq)}' dmelrel6_filtered.fa \
 outname=~/dmelrel6_filtered
 gawk '{ tot=tot+$1; print $1 "\t" tot} END {print tot}' $outname.txt \
 | sort -k1,1rn \
-| gawk 'NR ==1 {tot = $1 } NR > 1 {print $0 "\t" $2 / tot} ' | column -t
+| gawk 'NR ==1 {tot = $1 } NR > 1 {print $0 "\t" $2 / tot} ' \
+| cut -f1 \
+> $outname.sizes.txt
+
+plotCDF ~/*.sizes.txt /dev/stdout \
+| tee CDF.png \
+| display
 
 #N50
 #For cumulative 
