@@ -85,5 +85,5 @@ p + geom_bar(mapping=aes(x=V1))
 
 wget https://hpc.oit.uci.edu/~solarese/ee282/iso1_onp_a2_1kb.fastq.gz -O iso1_onp_a2_1kb.fastq.gz
 gunzip iso1_onp_a2_1kb.fastq.gz
-miniconda3/pkgs/minimap2-2.17-hed695b0_3/bin/minimap2 -x ava-pb iso1_onp_a2_1kb.fastq.gz iso1_onp_a2_1kb.fastq.gz| gzip -1 > reads.iso1_onp_a2_1kb.fastq.gz
+miniconda3/pkgs/minimap2-2.17-hed695b0_3/bin/minimap2 -a iso1_onp_a2_1kb.fastq.gz iso1_onp_a2_1kb.fastq.gz| gzip -1 > reads.iso1_onp_a2_1kb.fastq.gz
 miniasm/miniasm -f iso1_onp_a2_1kb.fastq.gz reads.iso1_onp_a2_1kb.fastq.gz > reads.gfa
