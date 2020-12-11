@@ -85,5 +85,97 @@ p + geom_bar(mapping=aes(x=V1))
 
 wget https://hpc.oit.uci.edu/~solarese/ee282/iso1_onp_a2_1kb.fastq.gz -O iso1_onp_a2_1kb.fastq.gz
 gunzip iso1_onp_a2_1kb.fastq.gz
-miniconda3/pkgs/minimap2-2.17-hed695b0_3/bin/minimap2 -a iso1_onp_a2_1kb.fastq.gz iso1_onp_a2_1kb.fastq.gz| gzip -1 > reads.iso1_onp_a2_1kb.fastq.gz
-miniasm/miniasm -f iso1_onp_a2_1kb.fastq.gz reads.iso1_onp_a2_1kb.fastq.gz > reads.gfa
+ln -s iso1_onp_a2_1kb.fastq.gz reads.fq
+miniconda3/pkgs/minimap2-2.17-hed695b0_3/bin/minimap2 -x ava-pb -t8 reads.fq reads.fq | gzip -1 > reads.paf.gz
+miniasm/miniasm -f reads.fq reads.paf.gz > reads.gfa
+
+miniasm/miniasm -f reads.fq overlaps.paf > reads.gfa
+miniconda3/pkgs/minimap2-2.17-hed695b0_3/bin/minimap2 -x ava-pb reads.fq iso1_onp_a2_1kb.fastq.gz > overlaps.paf
+
+miniconda3/pkgs/minimap2-2.17-hed695b0_3/bin/minimap2 -Sw5 -L100 -m0 iso1_onp_a2_1kb.fastq.gz{,} \
+| gzip -1 > reads.paf.gz
+
+basedir=~/
+projname=nanopore_assembly
+basedir=$basedir/$projname
+raw=$basedir/$projname/data/raw
+processed=$basedir/$projname/data/processed
+figures=$basedir/$projname/output/figures
+reports=$basedir/$projname/output/reports
+
+createProject $projname $basedir
+ln -sf iso1_onp_a2_1kb.fastq reads.fq
+
+minimap -t 32 -Sw5 -L100 -m0 reads.fq{,} \
+| gzip -1 \
+> onp.paf.gz
+
+```
+[M::mm_idx_gen::65.584*1.99] collected minimizers
+[M::mm_idx_gen::88.736*2.60] sorted minimizers
+[M::main::88.736*2.60] loaded/built the index for 506762 target sequence(s)
+[M::main] max occurrences of a minimizer to consider: 172
+[M::mm_idx_gen::278.109*10.21] collected minimizers
+[M::mm_idx_gen::278.662*10.21] sorted minimizers
+[M::main::278.662*10.21] loaded/built the index for 23704 target sequence(s)
+[M::main] max occurrences of a minimizer to consider: 28
+[M::main] Version: 0.2-r123
+[M::main] CMD: minimap -t 32 -Sw5 -L100 -m0 reads.fq reads.fq
+[M::main] Real time: 312.386 sec; CPU: 3304.826 sec
+```
+
+miniasm -f reads.fq onp.paf.gz \
+> reads.gfa
+
+```
+[M::main] ===> Step 1: reading read mappings <===
+[M::ma_hit_read::48.642*1.00] read 42603741 hits; stored 49491864 hits and 438202 sequences (3972983071 bp)
+[M::main] ===> Step 2: 1-pass (crude) read selection <===
+[M::ma_hit_sub::54.592*1.00] 415518 query sequences remain after sub
+[M::ma_hit_cut::55.346*1.00] 43109275 hits remain after cut
+[M::ma_hit_flt::56.023*1.00] 28320679 hits remain after filtering; crude coverage after filtering: 45.18
+[M::main] ===> Step 3: 2-pass (fine) read selection <===
+[M::ma_hit_sub::57.154*1.00] 411417 query sequences remain after sub
+[M::ma_hit_cut::57.569*1.00] 26855876 hits remain after cut
+[M::ma_hit_contained::58.205*1.00] 25394 sequences and 234066 hits remain after containment removal
+[M::main] ===> Step 4: graph cleaning <===
+[M::ma_sg_gen] read 205931 arcs
+[M::main] ===> Step 4.1: transitive reduction <===
+[M::asg_arc_del_trans] transitively reduced 131795 arcs
+[M::asg_arc_del_multi] removed 1509 multi-arcs
+[M::asg_arc_del_asymm] removed 2683 asymmetric arcs
+[M::main] ===> Step 4.2: initial tip cutting and bubble popping <===
+[M::asg_cut_tip] cut 887 tips
+[M::asg_pop_bubble] popped 655 bubbles and trimmed 4 tips
+[M::main] ===> Step 4.3: cutting short overlaps (3 rounds in total) <===
+[M::asg_arc_del_multi] removed 0 multi-arcs
+[M::asg_arc_del_asymm] removed 2484 asymmetric arcs
+[M::asg_arc_del_short] removed 10704 short overlaps
+[M::asg_cut_tip] cut 422 tips
+[M::asg_pop_bubble] popped 215 bubbles and trimmed 5 tips
+[M::asg_arc_del_multi] removed 0 multi-arcs
+[M::asg_arc_del_asymm] removed 301 asymmetric arcs
+[M::asg_arc_del_short] removed 397 short overlaps
+[M::asg_cut_tip] cut 110 tips
+[M::asg_pop_bubble] popped 31 bubbles and trimmed 4 tips
+[M::asg_arc_del_multi] removed 0 multi-arcs
+[M::asg_arc_del_asymm] removed 148 asymmetric arcs
+[M::asg_arc_del_short] removed 164 short overlaps
+[M::asg_cut_tip] cut 57 tips
+[M::asg_pop_bubble] popped 14 bubbles and trimmed 2 tips
+[M::main] ===> Step 4.4: removing short internal sequences and bi-loops <===
+[M::asg_cut_internal] cut 45 internal sequences
+[M::asg_cut_biloop] cut 88 small bi-loops
+[M::asg_cut_tip] cut 4 tips
+[M::asg_pop_bubble] popped 0 bubbles and trimmed 0 tips
+[M::main] ===> Step 4.5: aggressively cutting short overlaps <===
+[M::asg_arc_del_multi] removed 0 multi-arcs
+[M::asg_arc_del_asymm] removed 75 asymmetric arcs
+[M::asg_arc_del_short] removed 95 short overlaps
+[M::asg_cut_tip] cut 27 tips
+[M::asg_pop_bubble] popped 6 bubbles and trimmed 2 tips
+[M::main] ===> Step 5: generating unitigs <===
+[M::main] Version: 0.3-r179
+[M::main] CMD: miniasm -f reads.fq onp.paf.gz
+[M::main] Real time: 66.911 sec; CPU: 66.753 sec
+```
