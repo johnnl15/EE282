@@ -195,3 +195,15 @@ gawk '{ tot=tot+$1; print $1 "\t" tot} END {print tot}' $outname.txt \
 ```
 My answer is 4494246
 ```
+
+#For cumulative 
+outname=~/iso1_onp_a2_1kb_assemb
+gawk '{ tot=tot+$1; print $1 "\t" tot} END {print tot}' $outname.txt \
+| sort -k1,1rn \
+| gawk 'NR ==1 {tot = $1 } NR > 1 {print $0 "\t" $2 / tot} ' \
+| cut -f1 \
+> $outname.sizes.txt
+
+plotCDF ~/*.sizes.txt /dev/stdout \
+| tee CDF.png \
+| display
