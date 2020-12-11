@@ -179,3 +179,19 @@ miniasm -f reads.fq onp.paf.gz \
 [M::main] CMD: miniasm -f reads.fq onp.paf.gz
 [M::main] Real time: 66.911 sec; CPU: 66.753 sec
 ```
+awk '/^S/{print ">"$2"\n"$3}' reads.gfa | fold > out.fa
+
+outname=~/iso1_onp_a2_1kb_assemb
+bioawk -c fastx '{ print length($seq)}' out.fa \
+|column -t \
+|sort -rn \
+> $outname.txt
+
+outname=~/iso1_onp_a2_1kb_assemb
+gawk '{ tot=tot+$1; print $1 "\t" tot} END {print tot}' $outname.txt \
+| sort -k1,1rn \
+| gawk 'NR ==1 {tot = $1 } NR > 1 && $2/tot >= 0.5 {print $1} ' | head -1
+
+```
+My answer is 4494246
+```
