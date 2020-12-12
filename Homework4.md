@@ -1,13 +1,21 @@
-wget "ftp://ftp.flybase.net/genomes//Drosophila_melanogaster/dmel_r6.36_FB2020_05/fasta/dmel-all-chromosome-r6.36.fasta.gz"" -O dmel-all-chromosome-r6.36.fasta.gz
+#Title: Homework4
+#Author: Johnny Le
+#Date: 12/11/20
+Create environment. 
 
-wget "ftp://ftp.flybase.net/genomes//Drosophila_melanogaster/dmel_r6.36_FB2020_05/fasta/md5sum.txt" -O md5sum.txt
-
-md5sum --check md5sum.txt
-
-
-#minimumsize 100000
-
+```
 conda activate ee282
+```
+##Summaries of partitions
+Retrieve fasta files and md5sum and conduct a check. 
+
+```
+wget "ftp://ftp.flybase.net/genomes//Drosophila_melanogaster/dmel_r6.36_FB2020_05/fasta/dmel-all-chromosome-r6.36.fasta.gz"" -O dmel-all-chromosome-r6.36.fasta.gz
+wget "ftp://ftp.flybase.net/genomes//Drosophila_melanogaster/dmel_r6.36_FB2020_05/fasta/md5sum.txt" -O md5sum.txt
+md5sum --check md5sum.txt
+```
+Then partitional sequences with first greater than 100kb. 
+```
 infile=/pub/jje/ee282/dmel-all-chromosome-r6.23.fasta.gz
 outname=~/dmelrel6_filtered
 faFilter \
@@ -24,7 +32,9 @@ X       23542271
 2L      23513712
 Y       3667352
 4       1348131
-
+```
+Then conduct summaries on my partition. 
+```
 faSize dmelrel6_filtered.fa
 137547960 bases (490385 N's 137057575 real 137057575 upper 0 lower) in 7 sequences in 1 files
 Total size: mean 19649708.6 sd 12099037.5 min 1348131 (4) max 32079331 (3R) median 23542271
@@ -32,8 +42,9 @@ N count: mean 70055.0 sd 92459.2
 U count: mean 19579653.6 sd 12138278.9
 L count: mean 0.0 sd 0.0
 %0.00 masked total, %0.00 masked real
-
-#maximum size 100000
+```
+I do the same for sequences less than or equal to 100 kb. 
+```
 faFilter \
   -maxSize=100000 <(zcat $infile) /dev/stdout \
 > $outname.fa 
@@ -45,6 +56,10 @@ N count: mean 355.7 sd 1700.6
 U count: mean 2960.5 sd 6351.5
 L count: mean 0.0 sd 0.0
 %0.00 masked total, %0.00 masked real
+```
+Putting it together, for > 100 kb: 1) 137547960, 2)490385, 3) 7 sequences. 
+For <= 100 kb: 1) 6178042, 2)662593, 3)1863 sequences
+
 
 outname=~/dmelrel6_filtered
 bioawk -c fastx '{ print $name,length($seq),gc($seq) }' dmelrel6_filtered.fa \
@@ -207,3 +222,4 @@ gawk '{ tot=tot+$1; print $1 "\t" tot} END {print tot}' $outname.txt \
 plotCDF ~/*.sizes.txt /dev/stdout \
 | tee CDF.png \
 | display
+
