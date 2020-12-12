@@ -19,7 +19,7 @@ Then partitional sequences with first greater than 100kb.
 
 ```
 infile=/pub/jje/ee282/dmel-all-chromosome-r6.23.fasta.gz
-outname=~/dmelrel6_filtered
+outname=~/dmelrel6_filtered_part_Great
 faFilter \
   -minSize=100000 <(zcat $infile) /dev/stdout \
 | tee $outname.fa \
@@ -82,9 +82,9 @@ bioawk -c fastx '{ print length($seq)}' dmelrel6_filtered.fa \
 Then take txt file and import to R and runn ggplot to make histogram conducting log 10 transformation and 10 breaks. 
 ```
 library(ggplot2)
-dmelrel6_filtered$V1 <- log10(dmelrel6_filtered_len_Less$V1)
-dmelrel6_filtered$V1 <- cut(x=dmelrel6_filtered_Len_Less$V1,breaks = 10)
-p <- ggplot(data=dmelrel6_filtered)
+dmelrel6_filtered_len_Less$V1 <- log10(dmelrel6_filtered_len_Less$V1)
+dmelrel6_filtered_len_Less$V1 <- cut(x=dmelrel6_filtered_len_Less$V1,breaks = 10)
+p <- ggplot(data=dmelrel6_filtered_len_Less)
 p + geom_bar(mapping=aes(x=V1))
 ```
 
@@ -99,7 +99,7 @@ bioawk -c fastx '{ print gc($seq)}' dmelrel6_filtered.fa \
 Then take txt file and import to R and runn ggplot to make histogram conducting 10 breaks. 
 ```
 library(ggplot2)
-dmelrel6_filtered_GC_Less$V1 <- cut(x=dmelrel6_filtere_GC_Lessd$V1,breaks = 10)
+dmelrel6_filtered_GC_Less$V1 <- cut(x=dmelrel6_filtered_GC_Less$V1,breaks = 10)
 p <- ggplot(data=dmelrel6_filtered_GC_Less)
 p + geom_bar(mapping=aes(x=V1))
 ```
@@ -107,7 +107,7 @@ Then conduct cumulative sequence sizes from largest to smallest sequences for le
 
 ```
 outnameCDF=~/dmelrel6_filtered_Less
-gawk '{ tot=tot+$1; print $1 "\t" tot} END {print tot}' $outname.txt \
+gawk '{ tot=tot+$1; print $1 "\t" tot} END {print tot}' $outnamelenless.txt \
 | sort -k1,1rn \
 | gawk 'NR ==1 {tot = $1 } NR > 1 {print $0 "\t" $2 / tot} ' \
 | cut -f1 \
@@ -120,25 +120,25 @@ plotCDF dmelrel6_filtered_Less.sizes.txt /dev/stdout \
 Do the same above as for greater than 100 kb. 
 
 ```
-outname=~/dmelrel6_filtered_len_Great
-bioawk -c fastx '{ print length($seq)}' dmelrel6_filtered.fa \
+outnamelenGreat=~/dmelrel6_filtered_len_Great
+bioawk -c fastx '{ print length($seq)}' dmelrel6_filtered_part_Great.fa \
 |column -t \
 |sort -rn \
-> $outname.txt
+> $outnamelenGreat.txt
 
-outname=~/dmelrel6_filtered_GC_Great
-bioawk -c fastx '{ print gc($seq)}' dmelrel6_filtered.fa \
+outnameGCGreat=~/dmelrel6_filtered_GC_Great
+bioawk -c fastx '{ print gc($seq)}' dmelrel6_filtered_part_Great.fa \
 |column -t \
-> $outname.txt
+> $outnameGCGreat.txt
 
-outname=~/dmelrel6_filtered_Great
-gawk '{ tot=tot+$1; print $1 "\t" tot} END {print tot}' $outname.txt \
+outnameCDF=~/dmelrel6_filtered_Great
+gawk '{ tot=tot+$1; print $1 "\t" tot} END {print tot}' $outnamelenGreat.txt \
 | sort -k1,1rn \
 | gawk 'NR ==1 {tot = $1 } NR > 1 {print $0 "\t" $2 / tot} ' \
 | cut -f1 \
-> $outname.sizes.txt
+> $outnameCDF.sizes.txt
 
-plotCDF ~/*.sizes.txt /dev/stdout \
+plotCDF dmelrel6_filtered_Great.sizes.txt /dev/stdout \
 | tee CDF_Great_100kb.png \
 | display
 ```
@@ -146,14 +146,14 @@ For histograms in R, I used the following code
 
 ```
 library(ggplot2)
-dmelrel6_filtered_GC_Great$V1 <- cut(x=dmelrel6_filtere_GC_Greatd$V1,breaks = 10)
+dmelrel6_filtered_GC_Great$V1 <- cut(x=dmelrel6_filter_GC_Great$V1)
 p <- ggplot(data=dmelrel6_filtered_GC_Great)
 p + geom_bar(mapping=aes(x=V1))
 
 library(ggplot2)
-dmelrel6_filtered$V1 <- log10(dmelrel6_filtered_len_Great$V1)
-dmelrel6_filtered$V1 <- cut(x=dmelrel6_filtered_Len_Great$V1,breaks = 10)
-p <- ggplot(data=dmelrel6_filtered)
+dmelrel6_filtered_len_Great$V1 <- log10(dmelrel6_filtered_len_Great$V1)
+dmelrel6_filtered_len_Great$V1 <- cut(x=dmelrel6_filtered_len_Great$V1)
+p <- ggplot(data=dmelrel6_filtered_len_Great)
 p + geom_bar(mapping=aes(x=V1))
 ```
 
