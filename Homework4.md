@@ -96,7 +96,7 @@ bioawk -c fastx '{ print gc($seq)}' dmelrel6_filtered.fa \
 |column -t \
 > $outnameGCless.txt
 ```
-Then take txt file and import to R and runn ggplot to make histogram conducting 10 breaks. 
+Then take txt file and import to R and run ggplot to make histogram conducting 10 breaks. 
 ```
 library(ggplot2)
 dmelrel6_filtered_GC_Less$V1 <- cut(x=dmelrel6_filtered_GC_Less$V1,breaks = 10)
@@ -259,25 +259,26 @@ gawk '{ tot=tot+$1; print $1 "\t" tot} END {print tot}' $outname.txt \
 | sort -k1,1rn \
 | gawk 'NR ==1 {tot = $1 } NR > 1 && $2/tot >= 0.5 {print $1} ' | head -1
 
+4494246
 ```
 
 My answer is 4494246 which is less than the community's contig N50 of 21,485,538. My question is, what does that mean? Why is it less than.
 Does it mean that my sequencing method is inferior to that of the community's? 
 
-I then adapted prior script to plot on contiguity plot and compare with the contig and scaffold assemblies from Dr. Emerson's pipeline. 
+I then adapted prior script to plot on contiguity plot and compare with the contig and scaffold assemblies from Dr. Emerson's pipeline.
+It seems my assembly's sequence rank is longer than that of the scaffold and contig. I have included a graph of all three, onp (my assembly), ctg, and scaffold separately. 
 
 ```
-#For cumulative 
-outname=~/iso1_onp_a2_1kb_assemb
 gawk '{ tot=tot+$1; print $1 "\t" tot} END {print tot}' $outname.txt \
 | sort -k1,1rn \
 | gawk 'NR ==1 {tot = $1 } NR > 1 {print $0 "\t" $2 / tot} ' \
 | cut -f1 \
-> classrepos/pipeline/data/processed/$outname.sizes.txt
+> classrepos/pipeline/data/processed/iso1_onp_a2_1kb_assemb.sizes.txt
 
-plotCDF {ISO1.r6.ctg.sorted.sizes.txt, ISO1.r6.scaff.sorted.sizes.txt, iso1_onp_a2_1kb_assemb.sizes.txt} /dev/stdout \
-| tee classrepos/pipeline/data/processed/CDF.png \
+plotCDF ~/*.sizes.txt /dev/stdout \
+| tee AllThree.CDF.png \
 | display
+
 
 ```
 Describe which plot is which. 
