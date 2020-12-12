@@ -1,11 +1,11 @@
-## Title: Homework4, Author: Johnny Le, Date: 12/11/20
+# Title: Homework4, Author: Johnny Le, Date: 12/11/20
 
 Create environment. 
 
 ```
 conda activate ee282
 ```
-# Summaries of partitions
+## Summaries of partitions
 
 Retrieve fasta files and md5sum and conduct a check. 
 
@@ -157,7 +157,7 @@ p <- ggplot(data=dmelrel6_filtered_len_Great)
 p + geom_bar(mapping=aes(x=V1))
 ```
 
-# Genome Assembly 
+## Genome Assembly 
 
 First, retrieve file. Unzip and give it a call, reads.fq
 
@@ -244,7 +244,7 @@ I converted the gfa file into fa file.
 awk '/^S/{print ">"$2"\n"$3}' reads.gfa | fold > out.fa
 ```
 
-# Assembly assessment
+## Assembly assessment
 
 To find the n50, I utilized bioawk and gawk to find the n50. 
 
