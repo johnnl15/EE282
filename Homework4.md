@@ -14,7 +14,9 @@ wget "ftp://ftp.flybase.net/genomes//Drosophila_melanogaster/dmel_r6.36_FB2020_0
 wget "ftp://ftp.flybase.net/genomes//Drosophila_melanogaster/dmel_r6.36_FB2020_05/fasta/md5sum.txt" -O md5sum.txt
 md5sum --check md5sum.txt
 ```
+
 Then partitional sequences with first greater than 100kb. 
+
 ```
 infile=/pub/jje/ee282/dmel-all-chromosome-r6.23.fasta.gz
 outname=~/dmelrel6_filtered
@@ -33,7 +35,9 @@ X       23542271
 Y       3667352
 4       1348131
 ```
+
 Then conduct summaries on my partition. 
+
 ```
 faSize dmelrel6_filtered.fa
 137547960 bases (490385 N's 137057575 real 137057575 upper 0 lower) in 7 sequences in 1 files
@@ -43,7 +47,9 @@ U count: mean 19579653.6 sd 12138278.9
 L count: mean 0.0 sd 0.0
 %0.00 masked total, %0.00 masked real
 ```
+
 I do the same for sequences less than or equal to 100 kb. 
+
 ```
 faFilter \
   -maxSize=100000 <(zcat $infile) /dev/stdout \
@@ -57,15 +63,17 @@ U count: mean 2960.5 sd 6351.5
 L count: mean 0.0 sd 0.0
 %0.00 masked total, %0.00 masked real
 ```
+
+Answer to the first portion: 
 Putting it together, for > 100 kb: 1) 137547960, 2)490385, 3) 7 sequences. 
 For <= 100 kb: 1) 6178042, 2)662593, 3)1863 sequences
 
+#Plots of Sequences less than or greater than 100 kb. 
 
 outname=~/dmelrel6_filtered
 bioawk -c fastx '{ print $name,length($seq),gc($seq) }' dmelrel6_filtered.fa \
 |column -t \
 > $outname.txt
-
 
 outname=~/dmelrel6_filtered
 bioawk -c fastx '{ print length($seq)}' dmelrel6_filtered.fa \
