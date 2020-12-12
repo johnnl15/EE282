@@ -70,18 +70,42 @@ For <= 100 kb: 1) 6178042, 2)662593, 3)1863 sequences
 
 #Plots of Sequences less than or greater than 100 kb. 
 
-outname=~/dmelrel6_filtered
-bioawk -c fastx '{ print $name,length($seq),gc($seq) }' dmelrel6_filtered.fa \
-|column -t \
-> $outname.txt
+First I find the length of less than or equal to 100 kb. 
 
-outname=~/dmelrel6_filtered
+```
+outname=~/dmelrel6_filtered_len_Less
 bioawk -c fastx '{ print length($seq)}' dmelrel6_filtered.fa \
 |column -t \
 |sort -rn \
 > $outname.txt
+```
+Then take txt file and import to R and runn ggplot to make histogram conducting log 10 transformation and 10 breaks. 
+```
+library(ggplot2)
+dmelrel6_filtered$V1 <- log10(dmelrel6_filtered_len_Less$V1)
+dmelrel6_filtered$V1 <- cut(x=dmelrel6_filtered_Len_Less$V1,breaks = 10)
+p <- ggplot(data=dmelrel6_filtered)
+p + geom_bar(mapping=aes(x=V1))
+```
 
-#For cumulative 
+Then, find the GC%s
+
+```
+outname=~/dmelrel6_filtered_GC_Less
+bioawk -c fastx '{ print gc($seq)}' dmelrel6_filtered.fa \
+|column -t \
+> $outname.txt
+```
+Then take txt file and import to R and runn ggplot to make histogram conducting 10 breaks. 
+```
+library(ggplot2)
+dmelrel6_filtered_GC_Less$V1 <- cut(x=dmelrel6_filtere_GC_Lessd$V1,breaks = 10)
+p <- ggplot(data=dmelrel6_filtered_GC_Less)
+p + geom_bar(mapping=aes(x=V1))
+```
+Then conduct cumulative sequence sizes from largest to smallest sequences for less than 100 kb and plotCDF. 
+
+```
 outname=~/dmelrel6_filtered
 gawk '{ tot=tot+$1; print $1 "\t" tot} END {print tot}' $outname.txt \
 | sort -k1,1rn \
@@ -90,8 +114,10 @@ gawk '{ tot=tot+$1; print $1 "\t" tot} END {print tot}' $outname.txt \
 > $outname.sizes.txt
 
 plotCDF ~/*.sizes.txt /dev/stdout \
-| tee CDF.png \
+| tee CDF_less_100kb.png \
 | display
+```
+Do the same above as for greater than 100 kb. 
 
 #N50
 #For cumulative 
