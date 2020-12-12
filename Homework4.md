@@ -159,13 +159,6 @@ p + geom_bar(mapping=aes(x=V1))
 
 #Genome Assembly 
 
-#N50
-#For cumulative 
-outname=~/dmelrel6_filtered
-gawk '{ tot=tot+$1; print $1 "\t" tot} END {print tot}' $outname.txt \
-| sort -k1,1rn \
-| gawk 'NR ==1 {tot = $1 } NR > 1 && $2/tot >= 0.5 {print $1} ' | head -1
-
 First, retrieve file. Unzip and give it a call, reads.fq
 
 ```
@@ -250,6 +243,9 @@ I converted the gfa file into fa file.
 ```
 awk '/^S/{print ">"$2"\n"$3}' reads.gfa | fold > out.fa
 ```
+
+#Assembly assessment
+
 To find the n50, I utilized bioawk and gawk to find the n50. 
 
 ```
@@ -265,10 +261,11 @@ gawk '{ tot=tot+$1; print $1 "\t" tot} END {print tot}' $outname.txt \
 
 ```
 
-My answer is 4494246 whih is less than the community's contig N50 of 21,485,538. My question is, what does that mean? Why is it less than.
+My answer is 4494246 which is less than the community's contig N50 of 21,485,538. My question is, what does that mean? Why is it less than.
 Does it mean that my sequencing method is inferior to that of the community's? 
 
 I then adapted prior script to plot on contiguity plot and compare with the contig and scaffold assemblies from Dr. Emerson's pipeline. 
+
 ```
 #For cumulative 
 outname=~/iso1_onp_a2_1kb_assemb
@@ -276,13 +273,16 @@ gawk '{ tot=tot+$1; print $1 "\t" tot} END {print tot}' $outname.txt \
 | sort -k1,1rn \
 | gawk 'NR ==1 {tot = $1 } NR > 1 {print $0 "\t" $2 / tot} ' \
 | cut -f1 \
-> classrepos/pipeline/data/$outname.sizes.txt
+> classrepos/pipeline/data/processed/$outname.sizes.txt
 
-plotCDF {~/*.sizes.txt /dev/stdout \
-| tee CDF.png \
+plotCDF {ISO1.r6.ctg.sorted.sizes.txt, ISO1.r6.scaff.sorted.sizes.txt, iso1_onp_a2_1kb_assemb.sizes.txt} /dev/stdout \
+| tee classrepos/pipeline/data/processed/CDF.png \
 | display
 
 ```
+Describe which plot is which. 
+
+Finally I calculated BUSCO scores of both my assembly and the contig assembly to compare. 
 
 ```
 busco -c 32 -i out.fa -l diptera_odb10 -o dmel.busco.output -m genome 	
@@ -311,3 +311,6 @@ busco -c 32 -i ISO1.r6.ctg.fa -l diptera_odb10 -o dmel.busco.ctg.output -m genom
 	BUSCO analysis done. Total running time: 2981 seconds
 	Results written in /data/homezvol1/johnnl15/classrepos/pipeline/data/raw/dmel.busco.ctg.output
 ```
+
+Interesting, that my assembly was only 0.2% complete. Is this due to the RNA sequencing method being not as good as the community's method which achieved 99.5% completion? It seems to be the case. 
+
