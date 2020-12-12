@@ -1,4 +1,4 @@
-#Title: Homework4
+##Title: Homework4
 #Author: Johnny Le
 #Date: 12/11/20
 Create environment. 
@@ -6,7 +6,7 @@ Create environment.
 ```
 conda activate ee282
 ```
-##Summaries of partitions
+#Summaries of partitions
 Retrieve fasta files and md5sum and conduct a check. 
 
 ```
