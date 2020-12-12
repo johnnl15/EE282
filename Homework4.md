@@ -257,3 +257,17 @@ plotCDF ~/*.sizes.txt /dev/stdout \
 | tee CDF.png \
 | display
 
+
+Buscos Assembly Short Summary
+```
+  ***** Results: *****
+
+        C:0.2%[S:0.2%,D:0.0%],F:2.0%,M:97.8%,n:3285        
+        7       Complete BUSCOs (C)                        
+        7       Complete and single-copy BUSCOs (S)        
+        0       Complete and duplicated BUSCOs (D)         
+        66      Fragmented BUSCOs (F)                      
+        3212    Missing BUSCOs (M)                         
+        3285    Total BUSCO groups searched 
+```
+
