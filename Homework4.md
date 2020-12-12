@@ -39,7 +39,7 @@ Y       3667352
 Then conduct summaries on my partition. 
 
 ```
-faSize dmelrel6_filtered.fa
+faSize dmelrel6_filtered_part_Great.fa
 137547960 bases (490385 N's 137057575 real 137057575 upper 0 lower) in 7 sequences in 1 files
 Total size: mean 19649708.6 sd 12099037.5 min 1348131 (4) max 32079331 (3R) median 23542271
 N count: mean 70055.0 sd 92459.2
@@ -51,11 +51,12 @@ L count: mean 0.0 sd 0.0
 I do the same for sequences less than or equal to 100 kb. 
 
 ```
+outname=~/dmelrel6_filtered_part_Less
 faFilter \
   -maxSize=100000 <(zcat $infile) /dev/stdout \
 > $outname.fa 
 
-faSize dmelrel6_filtered.fa
+faSize dmelrel6_filtered_part_Less.fa
 6178042 bases (662593 N's 5515449 real 5515449 upper 0 lower) in 1863 sequences in 1 files
 Total size: mean 3316.2 sd 7116.2 min 544 (211000022279089) max 88768 (Unmapped_Scaffold_8_D1580_D1567) median 1567
 N count: mean 355.7 sd 1700.6
@@ -74,7 +75,7 @@ First I find the length of less than or equal to 100 kb.
 
 ```
 outnamelenless=~/dmelrel6_filtered_len_Less
-bioawk -c fastx '{ print length($seq)}' dmelrel6_filtered.fa \
+bioawk -c fastx '{ print length($seq)}' dmelrel6_filtered_part_Less.fa \
 |column -t \
 |sort -rn \
 > $outnamelenless.txt
@@ -92,7 +93,7 @@ Then, find the GC%s
 
 ```
 outnameGCless=~/dmelrel6_filtered_GC_Less
-bioawk -c fastx '{ print gc($seq)}' dmelrel6_filtered.fa \
+bioawk -c fastx '{ print gc($seq)}' dmelrel6_filtered_part_Less.fa \
 |column -t \
 > $outnameGCless.txt
 ```
@@ -146,13 +147,13 @@ For histograms in R, I used the following code
 
 ```
 library(ggplot2)
-dmelrel6_filtered_GC_Great$V1 <- cut(x=dmelrel6_filter_GC_Great$V1)
+dmelrel6_filtered_GC_Great$V1 <- cut(x=dmelrel6_filtered_GC_Great$V1,breaks=3)
 p <- ggplot(data=dmelrel6_filtered_GC_Great)
 p + geom_bar(mapping=aes(x=V1))
 
 library(ggplot2)
 dmelrel6_filtered_len_Great$V1 <- log10(dmelrel6_filtered_len_Great$V1)
-dmelrel6_filtered_len_Great$V1 <- cut(x=dmelrel6_filtered_len_Great$V1)
+dmelrel6_filtered_len_Great$V1 <- cut(x=dmelrel6_filtered_len_Great$V1,breaks=3)
 p <- ggplot(data=dmelrel6_filtered_len_Great)
 p + geom_bar(mapping=aes(x=V1))
 ```
