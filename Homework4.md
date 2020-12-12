@@ -119,6 +119,45 @@ plotCDF ~/*.sizes.txt /dev/stdout \
 ```
 Do the same above as for greater than 100 kb. 
 
+```
+outname=~/dmelrel6_filtered_len_Great
+bioawk -c fastx '{ print length($seq)}' dmelrel6_filtered.fa \
+|column -t \
+|sort -rn \
+> $outname.txt
+
+outname=~/dmelrel6_filtered_GC_Great
+bioawk -c fastx '{ print gc($seq)}' dmelrel6_filtered.fa \
+|column -t \
+> $outname.txt
+
+outname=~/dmelrel6_filtered_Great
+gawk '{ tot=tot+$1; print $1 "\t" tot} END {print tot}' $outname.txt \
+| sort -k1,1rn \
+| gawk 'NR ==1 {tot = $1 } NR > 1 {print $0 "\t" $2 / tot} ' \
+| cut -f1 \
+> $outname.sizes.txt
+
+plotCDF ~/*.sizes.txt /dev/stdout \
+| tee CDF_Great_100kb.png \
+| display
+```
+For histograms in R, I used the following code
+
+````
+library(ggplot2)
+dmelrel6_filtered_GC_Great$V1 <- cut(x=dmelrel6_filtere_GC_Greatd$V1,breaks = 10)
+p <- ggplot(data=dmelrel6_filtered_GC_Great)
+p + geom_bar(mapping=aes(x=V1))
+
+library(ggplot2)
+dmelrel6_filtered$V1 <- log10(dmelrel6_filtered_len_Great$V1)
+dmelrel6_filtered$V1 <- cut(x=dmelrel6_filtered_Len_Great$V1,breaks = 10)
+p <- ggplot(data=dmelrel6_filtered)
+p + geom_bar(mapping=aes(x=V1))
+```
+
+
 #N50
 #For cumulative 
 outname=~/dmelrel6_filtered
