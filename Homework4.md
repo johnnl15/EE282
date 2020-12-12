@@ -275,6 +275,7 @@ gawk '{ tot=tot+$1; print $1 "\t" tot} END {print tot}' $outname.txt \
 | cut -f1 \
 > classrepos/pipeline/data/processed/iso1_onp_a2_1kb_assemb.sizes.txt
 
+cd ~/classrepos/pipeline/data/processed
 plotCDF ~/*.sizes.txt /dev/stdout \
 | tee AllThree.CDF.png \
 | display
