@@ -144,7 +144,7 @@ plotCDF ~/*.sizes.txt /dev/stdout \
 ```
 For histograms in R, I used the following code
 
-````
+```
 library(ggplot2)
 dmelrel6_filtered_GC_Great$V1 <- cut(x=dmelrel6_filtere_GC_Greatd$V1,breaks = 10)
 p <- ggplot(data=dmelrel6_filtered_GC_Great)
@@ -159,8 +159,6 @@ p + geom_bar(mapping=aes(x=V1))
 
 #Genome Assembly 
 
-
-
 #N50
 #For cumulative 
 outname=~/dmelrel6_filtered
@@ -168,38 +166,19 @@ gawk '{ tot=tot+$1; print $1 "\t" tot} END {print tot}' $outname.txt \
 | sort -k1,1rn \
 | gawk 'NR ==1 {tot = $1 } NR > 1 && $2/tot >= 0.5 {print $1} ' | head -1
 
+First, retrieve file. Unzip and give it a call, reads.fq
 
-First, retrieve file. Then give it a call, reads.fq
-
+```
 wget https://hpc.oit.uci.edu/~solarese/ee282/iso1_onp_a2_1kb.fastq.gz -O iso1_onp_a2_1kb.fastq.gz
 gunzip iso1_onp_a2_1kb.fastq.gz
-ln -s iso1_onp_a2_1kb.fastq.gz reads.fq
-
-miniconda3/pkgs/minimap2-2.17-hed695b0_3/bin/minimap2 -x ava-pb -t8 reads.fq reads.fq | gzip -1 > reads.paf.gz
-miniasm/miniasm -f reads.fq reads.paf.gz > reads.gfa
-
-miniasm/miniasm -f reads.fq overlaps.paf > reads.gfa
-miniconda3/pkgs/minimap2-2.17-hed695b0_3/bin/minimap2 -x ava-pb reads.fq iso1_onp_a2_1kb.fastq.gz > overlaps.paf
-
-miniconda3/pkgs/minimap2-2.17-hed695b0_3/bin/minimap2 -Sw5 -L100 -m0 iso1_onp_a2_1kb.fastq.gz{,} \
-| gzip -1 > reads.paf.gz
-
-basedir=~/
-projname=nanopore_assembly
-basedir=$basedir/$projname
-raw=$basedir/$projname/data/raw
-processed=$basedir/$projname/data/processed
-figures=$basedir/$projname/output/figures
-reports=$basedir/$projname/output/reports
-
-createProject $projname $basedir
 ln -sf iso1_onp_a2_1kb.fastq reads.fq
+```
+Then I used Dr. Emerson's minimap and miniasm assembly code. 
 
+```
 minimap -t 32 -Sw5 -L100 -m0 reads.fq{,} \
 | gzip -1 \
 > onp.paf.gz
-
-```
 [M::mm_idx_gen::65.584*1.99] collected minimizers
 [M::mm_idx_gen::88.736*2.60] sorted minimizers
 [M::main::88.736*2.60] loaded/built the index for 506762 target sequence(s)
@@ -211,12 +190,10 @@ minimap -t 32 -Sw5 -L100 -m0 reads.fq{,} \
 [M::main] Version: 0.2-r123
 [M::main] CMD: minimap -t 32 -Sw5 -L100 -m0 reads.fq reads.fq
 [M::main] Real time: 312.386 sec; CPU: 3304.826 sec
-```
 
 miniasm -f reads.fq onp.paf.gz \
 > reads.gfa
 
-```
 [M::main] ===> Step 1: reading read mappings <===
 [M::ma_hit_read::48.642*1.00] read 42603741 hits; stored 49491864 hits and 438202 sequences (3972983071 bp)
 [M::main] ===> Step 2: 1-pass (crude) read selection <===
@@ -268,47 +245,69 @@ miniasm -f reads.fq onp.paf.gz \
 [M::main] CMD: miniasm -f reads.fq onp.paf.gz
 [M::main] Real time: 66.911 sec; CPU: 66.753 sec
 ```
-awk '/^S/{print ">"$2"\n"$3}' reads.gfa | fold > out.fa
+I converted the gfa file into fa file. 
 
+```
+awk '/^S/{print ">"$2"\n"$3}' reads.gfa | fold > out.fa
+```
+To find the n50, I utilized bioawk and gawk to find the n50. 
+
+```
 outname=~/iso1_onp_a2_1kb_assemb
 bioawk -c fastx '{ print length($seq)}' out.fa \
 |column -t \
 |sort -rn \
 > $outname.txt
 
-outname=~/iso1_onp_a2_1kb_assemb
 gawk '{ tot=tot+$1; print $1 "\t" tot} END {print tot}' $outname.txt \
 | sort -k1,1rn \
 | gawk 'NR ==1 {tot = $1 } NR > 1 && $2/tot >= 0.5 {print $1} ' | head -1
 
 ```
-My answer is 4494246
-```
 
+My answer is 4494246 whih is less than the community's contig N50 of 21,485,538. My question is, what does that mean? Why is it less than.
+Does it mean that my sequencing method is inferior to that of the community's? 
+
+I then adapted prior script to plot on contiguity plot and compare with the contig and scaffold assemblies from Dr. Emerson's pipeline. 
+```
 #For cumulative 
 outname=~/iso1_onp_a2_1kb_assemb
 gawk '{ tot=tot+$1; print $1 "\t" tot} END {print tot}' $outname.txt \
 | sort -k1,1rn \
 | gawk 'NR ==1 {tot = $1 } NR > 1 {print $0 "\t" $2 / tot} ' \
 | cut -f1 \
-> $outname.sizes.txt
+> classrepos/pipeline/data/$outname.sizes.txt
 
-plotCDF ~/*.sizes.txt /dev/stdout \
+plotCDF {~/*.sizes.txt /dev/stdout \
 | tee CDF.png \
 | display
 
-
-Buscos Assembly Short Summary
 ```
-  ***** Results: *****
-
-        C:0.2%[S:0.2%,D:0.0%],F:2.0%,M:97.8%,n:3285        
-        7       Complete BUSCOs (C)                        
-        7       Complete and single-copy BUSCOs (S)        
-        0       Complete and duplicated BUSCOs (D)         
-        66      Fragmented BUSCOs (F)                      
-        3212    Missing BUSCOs (M)                         
-        3285    Total BUSCO groups searched 
 ```
 busco -c 32 -i out.fa -l diptera_odb10 -o dmel.busco.output -m genome 
+Buscos Assembly Short Summary
+	
+  INFO:	
+	Results from dataset diptera_odb10              
+	C:0.2%[S:0.2%,D:0.0%],F:2.0%,M:97.8%,n:3285      
+	7	Complete BUSCOs (C)                       
+	7	Complete and single-copy BUSCOs (S)       
+	0	Complete and duplicated BUSCOs (D)        
+	66	Fragmented BUSCOs (F)                     
+	3212	Missing BUSCOs (M)                        
+	3285	Total BUSCO groups searched               
+	BUSCO analysis done. Total running time: 5532 seconds
+  Results written in /data/homezvol1/johnnl15/dmel.busco.output
+
 busco -c 32 -i ISO1.r6.ctg.fa -l diptera_odb10 -o dmel.busco.ctg.output -m genome 
+Results from dataset diptera_odb10               
+	
+	C:99.5%[S:99.1%,D:0.4%],F:0.2%,M:0.3%,n:3285     
+	3269	Complete BUSCOs (C)                       
+	3255	Complete and single-copy BUSCOs (S)     
+	14	Complete and duplicated BUSCOs (D)        
+	5	Fragmented BUSCOs (F)                     
+	11	Missing BUSCOs (M)                        
+	3285	Total BUSCO groups searched       
+
+```
