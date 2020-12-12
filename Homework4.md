@@ -157,6 +157,9 @@ p <- ggplot(data=dmelrel6_filtered)
 p + geom_bar(mapping=aes(x=V1))
 ```
 
+#Genome Assembly 
+
+
 
 #N50
 #For cumulative 
@@ -165,15 +168,13 @@ gawk '{ tot=tot+$1; print $1 "\t" tot} END {print tot}' $outname.txt \
 | sort -k1,1rn \
 | gawk 'NR ==1 {tot = $1 } NR > 1 && $2/tot >= 0.5 {print $1} ' | head -1
 
-#in R do the following commands
-dmelrel6_filtered$V1 <- log10(dmelrel6_filtered$V1)
-dmelrel6_filtered$V1 <- cut(x=dmelrel6_filtered$V1,breaks = 10)
-p <- ggplot(data=dmelrel6_filtered)
-p + geom_bar(mapping=aes(x=V1))
+
+First, retrieve file. Then give it a call, reads.fq
 
 wget https://hpc.oit.uci.edu/~solarese/ee282/iso1_onp_a2_1kb.fastq.gz -O iso1_onp_a2_1kb.fastq.gz
 gunzip iso1_onp_a2_1kb.fastq.gz
 ln -s iso1_onp_a2_1kb.fastq.gz reads.fq
+
 miniconda3/pkgs/minimap2-2.17-hed695b0_3/bin/minimap2 -x ava-pb -t8 reads.fq reads.fq | gzip -1 > reads.paf.gz
 miniasm/miniasm -f reads.fq reads.paf.gz > reads.gfa
 
