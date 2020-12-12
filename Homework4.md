@@ -270,4 +270,5 @@ Buscos Assembly Short Summary
         3212    Missing BUSCOs (M)                         
         3285    Total BUSCO groups searched 
 ```
-
+busco -c 32 -i out.fa -l diptera_odb10 -o dmel.busco.output -m genome 
+busco -c 32 -i ISO1.r6.ctg.fa -l diptera_odb10 -o dmel.busco.ctg.output -m genome 
