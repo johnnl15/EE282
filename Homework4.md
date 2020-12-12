@@ -73,11 +73,11 @@ For <= 100 kb: 1) 6178042, 2)662593, 3)1863 sequences
 First I find the length of less than or equal to 100 kb. 
 
 ```
-outname=~/dmelrel6_filtered_len_Less
+outnamelenless=~/dmelrel6_filtered_len_Less
 bioawk -c fastx '{ print length($seq)}' dmelrel6_filtered.fa \
 |column -t \
 |sort -rn \
-> $outname.txt
+> $outnamelenless.txt
 ```
 Then take txt file and import to R and runn ggplot to make histogram conducting log 10 transformation and 10 breaks. 
 ```
@@ -91,10 +91,10 @@ p + geom_bar(mapping=aes(x=V1))
 Then, find the GC%s
 
 ```
-outname=~/dmelrel6_filtered_GC_Less
+outnameGCless=~/dmelrel6_filtered_GC_Less
 bioawk -c fastx '{ print gc($seq)}' dmelrel6_filtered.fa \
 |column -t \
-> $outname.txt
+> $outnameGCless.txt
 ```
 Then take txt file and import to R and runn ggplot to make histogram conducting 10 breaks. 
 ```
@@ -106,14 +106,14 @@ p + geom_bar(mapping=aes(x=V1))
 Then conduct cumulative sequence sizes from largest to smallest sequences for less than 100 kb and plotCDF. 
 
 ```
-outname=~/dmelrel6_filtered
+outnameCDF=~/dmelrel6_filtered_Less
 gawk '{ tot=tot+$1; print $1 "\t" tot} END {print tot}' $outname.txt \
 | sort -k1,1rn \
 | gawk 'NR ==1 {tot = $1 } NR > 1 {print $0 "\t" $2 / tot} ' \
 | cut -f1 \
-> $outname.sizes.txt
+> $outnameCDF.sizes.txt
 
-plotCDF ~/*.sizes.txt /dev/stdout \
+plotCDF dmelrel6_filtered_Less.sizes.txt /dev/stdout \
 | tee CDF_less_100kb.png \
 | display
 ```
