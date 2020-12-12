@@ -266,7 +266,7 @@ My answer is 4494246 which is less than the community's contig N50 of 21,485,538
 Does it mean that my sequencing method is inferior to that of the community's? 
 
 I then adapted prior script to plot on contiguity plot and compare with the contig and scaffold assemblies from Dr. Emerson's pipeline.
-It seems my assembly's sequence rank is longer than that of the scaffold and contig. I have included a graph of all three, onp (my assembly), ctg, and scaffold separately. 
+It seems my assembly's sequence rank is longer than that of the scaffold and contig. I have included a graph of all three, onp (my assembly), ctg, and scaffold separately. The dotted line in the middle is my assembly. 
 
 ```
 gawk '{ tot=tot+$1; print $1 "\t" tot} END {print tot}' $outname.txt \
