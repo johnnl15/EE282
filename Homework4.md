@@ -283,11 +283,10 @@ plotCDF {~/*.sizes.txt /dev/stdout \
 | display
 
 ```
+
 ```
-busco -c 32 -i out.fa -l diptera_odb10 -o dmel.busco.output -m genome 
-Buscos Assembly Short Summary
+busco -c 32 -i out.fa -l diptera_odb10 -o dmel.busco.output -m genome 	
 	
-  INFO:	
 	Results from dataset diptera_odb10              
 	C:0.2%[S:0.2%,D:0.0%],F:2.0%,M:97.8%,n:3285      
 	7	Complete BUSCOs (C)                       
@@ -297,11 +296,11 @@ Buscos Assembly Short Summary
 	3212	Missing BUSCOs (M)                        
 	3285	Total BUSCO groups searched               
 	BUSCO analysis done. Total running time: 5532 seconds
-  Results written in /data/homezvol1/johnnl15/dmel.busco.output
+  	Results written in /data/homezvol1/johnnl15/dmel.busco.output
 
 busco -c 32 -i ISO1.r6.ctg.fa -l diptera_odb10 -o dmel.busco.ctg.output -m genome 
-Results from dataset diptera_odb10               
-	
+
+	Results from dataset diptera_odb10               
 	C:99.5%[S:99.1%,D:0.4%],F:0.2%,M:0.3%,n:3285     
 	3269	Complete BUSCOs (C)                       
 	3255	Complete and single-copy BUSCOs (S)     
@@ -309,5 +308,6 @@ Results from dataset diptera_odb10
 	5	Fragmented BUSCOs (F)                     
 	11	Missing BUSCOs (M)                        
 	3285	Total BUSCO groups searched       
-
+	BUSCO analysis done. Total running time: 2981 seconds
+	Results written in /data/homezvol1/johnnl15/classrepos/pipeline/data/raw/dmel.busco.ctg.output
 ```
