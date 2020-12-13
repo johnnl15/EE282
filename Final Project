@@ -1,0 +1,13 @@
+wget "ftp://ftp.ncbi.nlm.nih.gov/geo/samples/GSM4230nnn/GSM4230078/suppl/GSM4230078_Wounded_1_scRNA-Seq.mtx.gz" -O GSM4230078_Wounded_1_scRNA-Seq.mtx.gz
+gunzip GSM4230078_Wounded_1_scRNA-Seq.mtx.gz | less 
+
+wget "ftp://ftp.ncbi.nlm.nih.gov/geo/samples/GSM4230nnn/GSM4230078/suppl/GSM4230078_barcodes_Wounded_1_scRNA-Seq.tsv.gz" -O \
+  GSM4230078_barcodes_Wounded_1_scRNA-Seq.tsv.gz\
+  |gunzip GSM4230078_barcodes_Wounded_1_scRNA-Seq.tsv.gz | less 
+
+
+wget "ftp://ftp.ncbi.nlm.nih.gov/geo/samples/GSM4230nnn/GSM4230078/suppl/GSM4230078_genes_Wounded_1_scRNA-Seq.tsv.gz" -O GSM4230078_genes_Wounded_1_scRNA-Seq.tsv.gz \
+|gunzip \
+|less
+
+seurat-read-10x.R -d ~/ -o Wound1.SCSeq
