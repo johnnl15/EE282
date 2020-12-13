@@ -59,5 +59,26 @@ AAACCTGAGTCCTCCT SeuratProject       7917         2014
 AAACCTGAGTCGTACT SeuratProject      20745         4235
 AAACCTGAGTTGTAGA SeuratProject       5962         1636
 ```
+Then filter cells but unsure what i'm filtering out. Doublets? How to do that? 
 
+```
+seurat-filter-cells.R -i Wound1.SCSeq -s nFeature_RNA,nCount_RNA -l 1652,4398 -j 4235,20745 -o filtered_wound1
+# Before filtering:
+An object of class Seurat 
+27998 features across 7578 samples within 1 assay 
+Active assay: RNA (27998 features)
 
+# After filtering:
+An object of class Seurat 
+27998 features across 5166 samples within 1 assay 
+Active assay: RNA (27998 features)
+
+# Parameter values:
+
+                                  value
+input_format                     seurat
+output_format                    seurat
+subset_names    nFeature_RNA,nCount_RNA
+low_thresholds                1652,4398
+high_thresholds              4235,20745
+```
