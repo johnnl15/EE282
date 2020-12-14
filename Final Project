@@ -1,6 +1,15 @@
+I wanted to analyze the quality of the sequencing of my laboratory's data set. So first, I retrieved from the online database. 
+Retrieved file of wound one from my lab's deposit into ebi. And converted the sam file into 
+```
 http://www.ebi.ac.uk/ena/data/view/SRR10751968
 mkdir finalproj/wound1bam
 wget "ftp://ftp.sra.ebi.ac.uk/vol1/run/SRR107/SRR10751968/Wounded_1_scRNA_Seq.bam" Wounded_1_scRNA_Seq.bam
+samtools view Wounded_1_scRNA_Seq.bam | \
+     bioawk -c sam '{s=$seq; if(and($flag, 16)) {s=revcomp($seq)} print ">"$qname"\n"s}'
+```
+Then I conducted my own assembly of the the files in minimaps and minion. After which I compared it with the established mus musculus genome. 
+
+
 
 Makedirectory and get matrix, barcode, and genes files. Unzip them and rename them to barcodes.tsv, genes.tsv, and matrix.mtx. Then un seurat-read-10x.R
 
@@ -230,7 +239,14 @@ max_cells_per_ident    Inf
 min_cells_gene           3
 min_cells_group          3
 ```
+Then exported to cellbrowser. 
 
-seurat-export-cellbrowser.R -i tsne_wound1 -o html_output_wound1 -n StudyTest
+```
+seurat-export-cellbrowser.R -i tsne_wound1 -o html_output_wound1 -n wound1.browser
+Writing expression matrix to html_output_wound1/exprMatrix.tsv.gz
+Writing embeddings to html_output_wound1/tsne.coords.tsv
+Writing meta data to html_output_wound1/meta.tsv
+Prepared cellbrowser directory html_output_wound1
+```
 
-seurat-dim-plot.R -i cluster_wound1 -r pca -a $pca_dim_one -b $pca_dim_two -p $pt_size -l $label_size -d $do_label -f $group_by -t '$pca_plot_title' -m $pca_do_bare -u $pca_cols_use -x $pca_coord_fixed -n $pca_no_axes -k $pca_dark_theme -q $pca_plot_order -w $pca_png_width -j $pca_png_height -o $pca_image_file
+seurat-dim-plot.R -i cluster_wound1 -r pca -d do-label -t 'Wound1' -m do-bare -o pca_image_file_wound1
