@@ -20,22 +20,14 @@ Retrieved file of wound one from my lab's deposit into ebi. And converted the sa
 http://www.ebi.ac.uk/ena/data/view/SRR10751968
 mkdir finalproj/wound1bam
 wget "ftp://ftp.sra.ebi.ac.uk/vol1/run/SRR107/SRR10751968/Wounded_1_scRNA_Seq.bam" Wounded_1_scRNA_Seq.bam
-
-==> SYST ... done.    ==> PWD ... done.
-==> TYPE I ... done.  ==> CWD (1) /vol1/run/SRR107/SRR10751968 ... done.
-==> SIZE Wounded_1_scRNA_Seq.bam ... 42027091060
-==> PASV ... done.    ==> RETR Wounded_1_scRNA_Seq.bam ... done.
-Length: 42027091060 (39G) (unauthoritative)
-
-Wounded_1_scRNA_Seq.bam                  63%[===============================================>                             ]  24.74G  9.83MB/s    in 21m 59s
-Wounded_1_scRNA_Seq.bam: Disk quota exceeded, closing control connection.
---2020-12-13 19:27:55--  http://wounded_1_scrna_seq.bam/
-Resolving wounded_1_scrna_seq.bam (wounded_1_scrna_seq.bam)... failed: Name or service not known.
+wget "ftp://ftp.sra.ebi.ac.uk/vol1/run/SRR107/SRR10751966/Un_Wounded_1_scRNA_Seq.bam" Un_Wounded_1_scRNA_Seq.bam
+wget "ftp://ftp.sra.ebi.ac.uk/vol1/run/SRR107/SRR10751969/Wounded_2_scRNA_Seq.bam" Wounded_2_scRNA_Seq.bam
+wget "ftp://ftp.sra.ebi.ac.uk/vol1/run/SRR107/SRR10751966/Un_Wounded_1_scRNA_Seq.bam" Un_Wounded_1_scRNA_Seq.bam
 
 samtools view Wounded_1_scRNA_Seq.bam | \
 bioawk -c sam '{s=$seq; if(and($flag, 16)) {s=revcomp($seq)} print ">"$qname"\n"s}' Wounded_1_scRNA_Seq.bam -> Wounded_1_scRNA_Seq.fa
 ln -sf Wounded_1_scRNA_Seq.fastq reads.fq  
-    
+
 ```
 Then I conducted my own alignment of the the files in bwa mem. After which I compared it with the established mus musculus on busco. 
 
