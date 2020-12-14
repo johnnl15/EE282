@@ -22,11 +22,15 @@ mkdir finalproj/wound1bam
 wget "ftp://ftp.sra.ebi.ac.uk/vol1/run/SRR107/SRR10751968/Wounded_1_scRNA_Seq.bam" Wounded_1_scRNA_Seq.bam
 wget "ftp://ftp.sra.ebi.ac.uk/vol1/run/SRR107/SRR10751966/Un_Wounded_1_scRNA_Seq.bam" Un_Wounded_1_scRNA_Seq.bam
 wget "ftp://ftp.sra.ebi.ac.uk/vol1/run/SRR107/SRR10751969/Wounded_2_scRNA_Seq.bam" Wounded_2_scRNA_Seq.bam
-wget "ftp://ftp.sra.ebi.ac.uk/vol1/run/SRR107/SRR10751966/Un_Wounded_1_scRNA_Seq.bam" Un_Wounded_1_scRNA_Seq.bam
+wget "ftp://ftp.sra.ebi.ac.uk/vol1/run/SRR107/SRR10751967/Un_Wounded_2_scRNA_Seq.bam" Un_Wounded_2_scRNA_Seq.bam
 
+Instead I can print out mapq and analyze it in R to see the read quality. 
+I don't think I need to do the below. 
 samtools view Wounded_1_scRNA_Seq.bam | \
 bioawk -c sam '{s=$seq; if(and($flag, 16)) {s=revcomp($seq)} print ">"$qname"\n"s}' Wounded_1_scRNA_Seq.bam -> Wounded_1_scRNA_Seq.fa
 ln -sf Wounded_1_scRNA_Seq.fastq reads.fq  
+
+
 
 ```
 Then I conducted my own alignment of the the files in bwa mem. After which I compared it with the established mus musculus on busco. 
