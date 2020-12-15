@@ -12,8 +12,6 @@
 srun hostname > out.txt
 
 
-
-
 I wanted to analyze the quality of the sequencing of my laboratory's data set. So first, I retrieved from the online database. 
 Retrieved file of wound one from my lab's deposit into ebi. And converted the sam file into 
 ```
@@ -24,8 +22,13 @@ wget "ftp://ftp.sra.ebi.ac.uk/vol1/run/SRR107/SRR10751966/Un_Wounded_1_scRNA_Seq
 wget "ftp://ftp.sra.ebi.ac.uk/vol1/run/SRR107/SRR10751969/Wounded_2_scRNA_Seq.bam" Wounded_2_scRNA_Seq.bam
 wget "ftp://ftp.sra.ebi.ac.uk/vol1/run/SRR107/SRR10751967/Un_Wounded_2_scRNA_Seq.bam" Un_Wounded_2_scRNA_Seq.bam
 
-samtools view Wounded_1_scRNA_Seq.bam | awk -F "\t" '{print $5}' -> Wounded_1_scRNA_Seq.MapQ.txt
+samtools view Un_Wounded_1_scRNA_Seq.bam | awk -F "\t" '{print $5}' \
+|sort \
+|uniq -c \
+|sort -nr \
+> Un_Wounded_1_scRNA_Seq.MapQ.txt
 
+```
 Instead I can print out mapq and analyze it in R to see the read quality. 
 I don't think I need to do the below. 
 samtools view Wounded_1_scRNA_Seq.bam | \
@@ -66,6 +69,18 @@ gunzip GSM4230078_barcodes_Wounded_1_scRNA-Seq.tsv.gz
 mv GSM4230078_barcodes_Wounded_1_scRNA-Seq.tsv barcodes.tsv
 mv GSM4230078_genes_Wounded_1_scRNA-Seq.tsv genes.tsv
 mv GSM4230078_Wounded_1_scRNA-Seq.mtx matrix.mtx
+
+
+gunzip GSM4230076_genes_Un-Wounded_1_scRNA-Seq.tsv
+gunzip GSM4230076_barcodes_Un-Wounded_1_scRNA-Seq.tsv
+
+mv GSM4230076_barcodes_Un-Wounded_1_scRNA-Seq.tsv barcodes.tsv
+mv GSM4230076_genes_Un-Wounded_1_scRNA-Seq.tsv genes.tsv
+mv GSM4230076_Un-Wounded_1_scRNA-Seq.mtx matrix.mtx
+
+ftp://ftp.ncbi.nlm.nih.gov/geo/samples/GSM4230nnn/GSM4230076/suppl/GSM4230076%5FUn%2DWounded%5F1%5FscRNA%2DSeq%2Emtx%2Egz
+https://www.ncbi.nlm.nih.gov/geo/download/?acc=GSM4230076&format=file&file=GSM4230076%5FUn%2DWounded%5F1%5FscRNA%2DSeq%2Emtx%2Egz
+
 
 seurat-read-10x.R -d ~/finalproj/wound1 -o Wound1.SCSeq
 ```
