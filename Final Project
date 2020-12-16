@@ -21,12 +21,13 @@ wget "ftp://ftp.sra.ebi.ac.uk/vol1/run/SRR107/SRR10751968/Wounded_1_scRNA_Seq.ba
 wget "ftp://ftp.sra.ebi.ac.uk/vol1/run/SRR107/SRR10751966/Un_Wounded_1_scRNA_Seq.bam" Un_Wounded_1_scRNA_Seq.bam
 wget "ftp://ftp.sra.ebi.ac.uk/vol1/run/SRR107/SRR10751969/Wounded_2_scRNA_Seq.bam" Wounded_2_scRNA_Seq.bam
 wget "ftp://ftp.sra.ebi.ac.uk/vol1/run/SRR107/SRR10751967/Un_Wounded_2_scRNA_Seq.bam" Un_Wounded_2_scRNA_Seq.bam
+wget "ftp://ftp.sra.ebi.ac.uk/vol1/run/SRR107/SRR10751970/Wounded_3_scRNA_Seq.bam" Wounded_3_scRNA_Seq.bam
 
-samtools view Un_Wounded_1_scRNA_Seq.bam | awk -F "\t" '{print $5}' \
+samtools view Wounded_3_scRNA_Seq.bam | awk -F "\t" '{print $5}' \
 |sort \
 |uniq -c \
 |sort -nr \
-> Un_Wounded_1_scRNA_Seq.MapQ.txt
+> Wounded_3_scRNA_Seq.MapQ.txt
 
 ```
 Instead I can print out mapq and analyze it in R to see the read quality. 
