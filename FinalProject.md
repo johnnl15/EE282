@@ -6,7 +6,7 @@ Initially, the project intention was to analyze skin barrier defect tissue RNA s
 
 ### Methods: 
 
-First, assembly bam files which had been outputted from Cell Ranger were downloaded from www.ebi.ac.uk. Cell Ranger utilizes STAR alignment and calculates its MAPQ scores with this equation, -10*log10(1-(1/Nmap)). Scores range from 0-255 with 0 being unmapped, 255 being uniquely mapped, and scores in between being multimapped. For example, a MAPQ score of 3 would equal 5 different mappings for that particular read suggesting low quality mapping. Finally, 255 score would yield a 1 unique mapping of the read. Please see the _Final Proj Assembly MAPQ.sh_ file. 
+First, assembly bam files which had been outputted from Cell Ranger were downloaded from www.ebi.ac.uk. Cell Ranger utilizes STAR alignment and calculates its MAPQ scores with this equation, -10*log10(1-(1/Nmap)). Scores range from 0-255 with 0 being unmapped, 255 being uniquely mapped, and scores in between being multimapped. For example, a MAPQ score of 3 would equal 5 different mappings for that particular read suggesting low quality mapping. Finally, 255 score would yield a 1 unique mapping of the read. Please see the _Final Proj Assembly MAPQ MTXBarGene.sh_ file. 
 
 ### Results: 
 
@@ -20,7 +20,7 @@ The percentage unique mapped being approximately 91% is very high and suggests a
 
 ### Method: 
 
-Barcodes, genes, and matrices of single cell sequencing reads were downloaded and run through the Seurat pipeline following the Satija lab’s guided clustering tutorial. In brief, data was filtered based on feature outliers which could indicate reads coming from less than a cell or doublets. Additionally, cells with greater than five percent of mitochondria genes were removed since it could indicate apoptotic processes (See **Figure1.png**). Data was normalized, scaled, and dimensionally reduced for 2D plotting. Vinplots of particular metabolic genes were conducted. I plotted RNA counts, feature counts, and mitochondrial percentage. Then, violin plots were made to visualize differential gene expression of metabolically related genes (*Eno3*, *Pgam2*, *Cox7a1*, and *Fabp3*) for all the samples. 
+Barcodes, genes, and matrices of single cell sequencing reads were downloaded and run through the Seurat pipeline following the Satija lab’s guided clustering tutorial (Please see the _Final Proj Assembly MAPQ MTXBarGene.sh_ file). In brief, data was filtered based on feature outliers which could indicate reads coming from less than a cell or doublets. Additionally, cells with greater than five percent of mitochondria genes were removed since it could indicate apoptotic processes (See **Figure1.png**). Data was normalized, scaled, and dimensionally reduced for 2D plotting. Vinplots of particular metabolic genes were conducted. I plotted RNA counts, feature counts, and mitochondrial percentage. Then, violin plots were made to visualize differential gene expression of metabolically related genes (*Eno3*, *Pgam2*, *Cox7a1*, and *Fabp3*) for all the samples. 
  
 ### Results: 
 
